@@ -39,17 +39,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mProgressBar=findViewById(R.id.progressBar);
-        URL url = NetworkUtils.buildURl();
-        Log.i("url", String.valueOf(url));
-        new MyAsyncTask().execute(url);
         mRecyclerView = findViewById(R.id.recyclerView);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         DividerItemDecoration itemDecor = new DividerItemDecoration(this, HORIZONTAL);
 
         mRecyclerView.addItemDecoration(itemDecor);
-        URL ur11=NetworkUtils.buildURl();
-        new MyAsyncTask().execute(ur11);
+        URL ur1=NetworkUtils.buildURl();
+        new MyAsyncTask().execute(ur1);
 
 
     }

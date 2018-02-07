@@ -151,7 +151,7 @@ public class MainActivityAsyncLoader extends AppCompatActivity implements Loader
                     startActivity(i);
                 }
             });
-
+            mRecyclerView.setHasFixedSize(true);
             mRecyclerView.setAdapter(mMyAdapter);
             mMyAdapter.notifyDataSetChanged();
 

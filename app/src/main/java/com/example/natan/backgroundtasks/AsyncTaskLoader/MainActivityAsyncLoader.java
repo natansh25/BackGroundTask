@@ -1,6 +1,7 @@
 package com.example.natan.backgroundtasks.AsyncTaskLoader;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
@@ -16,11 +17,13 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.example.natan.backgroundtasks.DetailActivity;
 import com.example.natan.backgroundtasks.MainActivity;
 import com.example.natan.backgroundtasks.Network.NetworkUtils;
 import com.example.natan.backgroundtasks.Pojo.Contacts;
 import com.example.natan.backgroundtasks.Pojo.MyAdapter;
 import com.example.natan.backgroundtasks.R;
+import com.example.natan.backgroundtasks.Utils.PrefrencesKeys;
 
 import org.json.JSONException;
 
@@ -58,7 +61,6 @@ public class MainActivityAsyncLoader extends AppCompatActivity implements Loader
 
         mRecyclerView.addItemDecoration(itemDecor);
         URL ur11 = NetworkUtils.buildURl();
-        //new MyAsyncTask().execute(ur11);
 
         Bundle bundle = new Bundle();
         bundle.putString(URL_EXTRA, ur11.toString());
@@ -144,7 +146,9 @@ public class MainActivityAsyncLoader extends AppCompatActivity implements Loader
             mMyAdapter = new MyAdapter(data, new MyAdapter.RecyclerViewClickListener() {
                 @Override
                 public void onClick(Contacts contacts) {
-                    Toast.makeText(MainActivityAsyncLoader.this, String.valueOf(contacts.getPhone()), Toast.LENGTH_SHORT).show();
+                    Intent i = new Intent(MainActivityAsyncLoader.this, DetailActivity.class);
+                    i.putExtra(PrefrencesKeys.Parcelable_key, contacts);
+                    startActivity(i);
                 }
             });
 
@@ -161,45 +165,4 @@ public class MainActivityAsyncLoader extends AppCompatActivity implements Loader
 
     }
 
-
-    /*class MyAsyncTask extends AsyncTask<URL, Void, List<Contacts>> {
-
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            mProgressBar.setVisibility(View.VISIBLE);
-        }
-
-        @Override
-        protected List<Contacts> doInBackground(URL... urls) {
-
-
-            try {
-                List<Contacts> json = NetworkUtils.fetchContactData(urls[0]);
-                return json;
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-            return null;
-        }
-
-
-        @Override
-        protected void onPostExecute(List<Contacts> contacts) {
-            super.onPostExecute(contacts);
-            mProgressBar.setVisibility(View.INVISIBLE);
-
-            mMyAdapter = new MyAdapter(contacts, new MyAdapter.RecyclerViewClickListener() {
-                @Override
-                public void onClick(Contacts contacts) {
-                    Toast.makeText(MainActivityAsyncLoader.this, String.valueOf(contacts.getPhone()), Toast.LENGTH_SHORT).show();
-                }
-            });
-
-            mRecyclerView.setAdapter(mMyAdapter);
-            mMyAdapter.notifyDataSetChanged();
-        }
-    }*/
 }

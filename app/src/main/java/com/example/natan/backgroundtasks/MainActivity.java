@@ -1,5 +1,6 @@
 package com.example.natan.backgroundtasks;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -32,20 +33,21 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView mRecyclerView;
     private MyAdapter mMyAdapter;
     private ProgressBar mProgressBar;
+    public final static String PARCEBLE_KEY = "parcel";
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mProgressBar=findViewById(R.id.progressBar);
+        mProgressBar = findViewById(R.id.progressBar);
         mRecyclerView = findViewById(R.id.recyclerView);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         DividerItemDecoration itemDecor = new DividerItemDecoration(this, HORIZONTAL);
 
         mRecyclerView.addItemDecoration(itemDecor);
-        URL ur1=NetworkUtils.buildURl();
+        URL ur1 = NetworkUtils.buildURl();
         new MyAsyncTask().execute(ur1);
 
 
@@ -84,7 +86,9 @@ public class MainActivity extends AppCompatActivity {
             mMyAdapter = new MyAdapter(contacts, new MyAdapter.RecyclerViewClickListener() {
                 @Override
                 public void onClick(Contacts contacts) {
-                    Toast.makeText(MainActivity.this, String.valueOf(contacts.getPhone()), Toast.LENGTH_SHORT).show();
+                    Intent i = new Intent(MainActivity.this, DetailActivity.class);
+                    i.putExtra(PARCEBLE_KEY, contacts);
+                    startActivity(i);
                 }
             });
 

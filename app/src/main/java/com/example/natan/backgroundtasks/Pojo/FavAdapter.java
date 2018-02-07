@@ -3,6 +3,7 @@ package com.example.natan.backgroundtasks.Pojo;
 import android.content.Context;
 import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,7 +35,7 @@ public class FavAdapter extends RecyclerView.Adapter<FavAdapter.MyViewHolder> {
     }
 
 
-    public FavAdapter( Context context, RecyclerViewClickListenerFav listener) {
+    public FavAdapter(Context context, RecyclerViewClickListenerFav listener) {
 
         mContext = context;
         mListener = listener;
@@ -61,14 +62,30 @@ public class FavAdapter extends RecyclerView.Adapter<FavAdapter.MyViewHolder> {
         int id = mCursor.getInt(mCursor.getColumnIndex(Contract.Fav._ID));
 
         holder.itemView.setTag(id);
+        holder.txt_name.setText(name);
         Picasso.with(mContext).load(image).into(holder.mCircleImageView);
 
 
     }
 
+
     @Override
     public int getItemCount() {
+        if (mCursor == null) {
+            return 0;
+        }
         return mCursor.getCount();
+    }
+
+
+    public void swapCursor(Cursor newCursor) {
+        // Always close the previous mCursor first
+        if (mCursor != null) mCursor.close();
+        mCursor = newCursor;
+        if (newCursor != null) {
+            // Force the RecyclerView to refresh
+            this.notifyDataSetChanged();
+        }
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -82,10 +99,20 @@ public class FavAdapter extends RecyclerView.Adapter<FavAdapter.MyViewHolder> {
 
             mCircleImageView = itemView.findViewById(R.id.img_profile);
             txt_name = itemView.findViewById(R.id.txt_name);
+            itemView.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
+
+            mCursor.moveToPosition(getAdapterPosition());
+            String name = mCursor.getString(mCursor.getColumnIndex(Contract.Fav.COLUMN_NAME));
+            Log.i("xyz",name);
+            String phone = mCursor.getString(mCursor.getColumnIndex(Contract.Fav.COLUMN_PHONE));
+            String image = mCursor.getString(mCursor.getColumnIndex(Contract.Fav.COLUMN_IMAGE));
+            Contacts contacts = new Contacts(name, image, phone);
+            mListener.onClick(contacts);
+
 
         }
     }

@@ -56,7 +56,7 @@ public class MyContentProvider extends ContentProvider {
     @Override
     public Uri insert(Uri uri, ContentValues values) {
 
-        final SQLiteDatabase db=mDbHelper.getWritableDatabase();
+        final SQLiteDatabase db = mDbHelper.getWritableDatabase();
         Uri returnUri; // URI to be returned
 
 
@@ -85,7 +85,7 @@ public class MyContentProvider extends ContentProvider {
 
         Context context = getContext();
 
-        mDbHelper=new DbHelper(context);
+        mDbHelper = new DbHelper(context);
 
         return false;
     }
@@ -93,8 +93,30 @@ public class MyContentProvider extends ContentProvider {
     @Override
     public Cursor query(Uri uri, String[] projection, String selection,
                         String[] selectionArgs, String sortOrder) {
-        // TODO: Implement this to handle query requests from clients.
-        throw new UnsupportedOperationException("Not yet implemented");
+
+        final SQLiteDatabase db = mDbHelper.getWritableDatabase();
+        Cursor retCursor;
+
+
+        int match = sUriMatcher.match(uri);
+        switch (match) {
+            case TASKS:
+                retCursor = db.query(Contract.Fav.TABLE_NAME,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder);
+                break;
+            default:
+                throw new UnsupportedOperationException("Unknown uri: " + uri);
+        }
+
+        retCursor.setNotificationUri(getContext().getContentResolver(), uri);
+
+        // Return the desired Cursor
+        return retCursor;
     }
 
     @Override

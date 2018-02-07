@@ -34,7 +34,7 @@ public class NetworkUtils {
     //Fetching the json response
 
     public static List<Contacts> fetchContactData(URL url) throws JSONException {
-        Log.i("xyz", String.valueOf(url));
+        //Log.i("xyz", String.valueOf(url));
 
         String jsonResponse = null;
         try {
@@ -105,7 +105,6 @@ public class NetworkUtils {
 
 
             String name = ob.getString("name");
-            Log.i("hula", name);
             String phone = ob.getString("phone");
             String image = ob.getString("image");
             //Toast.makeText(mContext, "", Toast.LENGTH_SHORT).show();

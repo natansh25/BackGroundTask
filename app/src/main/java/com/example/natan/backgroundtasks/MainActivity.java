@@ -1,6 +1,7 @@
 package com.example.natan.backgroundtasks;
 
 import android.annotation.SuppressLint;
+import android.net.Uri;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.content.Intent;
@@ -15,6 +16,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -60,6 +62,28 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         mRecyclerView.addItemDecoration(itemDecor);
         URL ur1 = NetworkUtils.buildURl();
         new MyAsyncTask().execute(ur1);
+
+
+        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+
+
+                int id = (int) viewHolder.itemView.getTag();
+                String sid = String.valueOf(id);
+                Uri uri = Contract.Fav.CONTENT_URI;
+                uri = uri.buildUpon().appendPath(sid).build();
+                getContentResolver().delete(uri, null, null);
+                getSupportLoaderManager().restartLoader(LOADER_ID, null, MainActivity.this);
+
+
+            }
+        }).attachToRecyclerView(mRecyclerView);
 
 
     }
